@@ -1,0 +1,39 @@
+class Solution {
+public:
+    int countUnguarded(int m, int n, vector<vector<int>>& guards, vector<vector<int>>& walls) {
+        vector<vector<char>> grid(m, vector<char>(n, 0));
+        
+        // Place walls and guards
+        for (const auto& wall : walls) {
+            grid[wall[0]][wall[1]] = 'W';
+        }
+        for (const auto& guard : guards) {
+            grid[guard[0]][guard[1]] = 'G';
+        }
+        
+        // Directions: up, right, down, left
+        vector<pair<int, int>> dirs = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+        
+        // Simulate guard visibility
+        for (const auto& guard : guards) {
+            int r = guard[0], c = guard[1];
+            for (const auto& [dr, dc] : dirs) {
+                int nr = r + dr, nc = c + dc;
+                while (nr >= 0 && nr < m && nc >= 0 && nc < n) {
+                    if (grid[nr][nc] == 'W' || grid[nr][nc] == 'G') break;
+                    if (grid[nr][nc] == 0) grid[nr][nc] = 'V';
+                    nr += dr;
+                    nc += dc;
+                }
+            }
+        }
+        
+        // Count unguarded cells
+        int unguarded = 0;
+        for (const auto& row : grid) {
+            unguarded += count(row.begin(), row.end(), 0);
+        }
+        
+        return unguarded;
+    }
+};
