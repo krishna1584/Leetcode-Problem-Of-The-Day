@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int maxCount(vector<int>& banned, int n, int maxSum) {
+        int ans=0;
+      unordered_set <int> mp;
+      for(auto n:banned){
+          mp.insert(n);
+      }  
+      for(int i=1; i<=n;i++){
+          if(mp.find(i)==mp.end() && (maxSum-i)>=0){
+              ans++;
+              maxSum=maxSum-i;
+          }
+      }
+      return ans;
+    }
+};
