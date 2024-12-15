@@ -1,0 +1,33 @@
+class Solution {
+public:
+    double maxAverageRatio(vector<vector<int>>& c, int e) {
+        priority_queue<pair<double,pair<double,double>>> pq;
+        for(auto &i:c)
+        {
+            double rat1 = ((double)i[0])/i[1];
+            double rat2 = ((double)(i[0]+1))/(i[1]+1);
+            pq.push({rat2-rat1,{(double)i[0],(double)i[1]}});
+        }
+        while(e>0)
+        {
+            double pass = pq.top().second.first;
+            double tot = pq.top().second.second;
+            pq.pop();
+            pass+=1;
+            tot+=1;
+            double rat1 = pass/tot;
+            double rat2 = (pass+1)/(tot+1);
+            pq.push({rat2-rat1,{pass,tot}});
+            e--;
+        }
+        double ans = 0;
+        double siz = c.size();
+        while(!pq.empty())
+        {
+            ans+=pq.top().second.first/pq.top().second.second;
+            pq.pop();
+        }
+        ans/=siz;
+        return ans;
+    }
+};
