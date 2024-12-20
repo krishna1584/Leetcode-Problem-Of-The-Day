@@ -1,0 +1,16 @@
+class Solution {
+public:
+    void solve(TreeNode * l, TreeNode * r, int lvl)
+    {
+        if(!l || !r)
+        return;
+        if(lvl%2)
+        swap(l->val,r->val);
+        solve(l->left,r->right,lvl+1);
+        solve(l->right,r->left,lvl+1);
+    }
+    TreeNode* reverseOddLevels(TreeNode* root) {
+        solve(root->left,root->right,1);
+        return root;
+    }
+};
