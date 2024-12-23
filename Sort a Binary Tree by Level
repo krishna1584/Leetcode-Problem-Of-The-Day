@@ -1,0 +1,65 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int minimumOperations(TreeNode* root) {
+        queue<pair<TreeNode*, int>> q;
+        q.push({root, 0});
+
+        vector<vector<int>> data;
+
+        while(!q.empty())
+        {
+            pair<TreeNode*, int> p = q.front();
+            q.pop();
+
+            if (data.size() == p.second)
+                data.push_back({p.first->val});
+            else data[p.second].push_back(p.first->val);
+
+            TreeNode *left = p.first->left;
+            TreeNode *right = p.first->right;
+
+            if (left != NULL) q.push({left, p.second + 1});
+            if (right != NULL) q.push({right, p.second + 1});
+        }
+
+        int res = 0;
+        for(int i = 0; i < data.size(); i++)
+        {
+            res += countNumberSwapToSort(data[i]);
+        }
+
+        return res;
+    }
+
+    int countNumberSwapToSort(vector<int> &a)
+    {
+        vector<pair<int, int>> b(a.size());
+        for (int i = 0; i < a.size(); i++)
+            b[i] = {a[i], i};
+        
+        sort(b.begin(), b.end());
+        int count = 0;
+        for(int i = 0; i < b.size(); i++)
+        {
+            if (b[i].first == a[i]) continue;
+            while(b[i].first != a[i])
+            {
+                int j = b[i].second;
+                swap(b[i], b[j]);
+                count++;
+            }
+        }
+        return count;
+    }
+};
